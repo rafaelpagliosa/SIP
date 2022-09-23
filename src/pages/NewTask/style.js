@@ -4,8 +4,7 @@ import { borderColor, color } from 'react-native/Libraries/Components/View/React
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f4f4f4',
-        overflow: "visible",
+        marginTop: "10%"
     },
     label: {
         width: "90%",
@@ -54,9 +53,17 @@ const styles = StyleSheet.create({
         width: "90%",
         marginLeft: "auto",
         marginRight: "auto",
-        
+
         height: "25%",
         borderTopWidth: 1,
+    },
+    buttonCam:{
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#121212',
+        margin: 20,
+        borderRadius: 10,
+        height: 50,
     }
 });
 
