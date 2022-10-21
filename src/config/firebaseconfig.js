@@ -38,7 +38,10 @@ const firebaseConfig = {
 const app = firebase.default.initializeApp(firebaseConfig);
 
 export default firebase
+
+
 */
+
 
 import firebase from "firebase";
 import "firebase/storage";

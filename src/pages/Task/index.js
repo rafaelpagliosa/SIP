@@ -3,6 +3,7 @@ import {
     SafeareaView,
     View,
     Text,
+    Alert,
     TouchableOpacity,
     FlatList
 } from "react-native";

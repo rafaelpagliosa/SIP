@@ -1,17 +1,20 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Picker, ScrollView, Modal, Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Picker, ScrollView, Modal, Image, Alert, ActivityIndicator } from "react-native";
 import { FontAwesome } from '@expo/vector-icons'
 
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Camera } from 'expo-camera'
 import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
 
 import firebase from '../../config/firebaseconfig';
 import styles from './style';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { render } from 'react-dom';
+
+import Loading from '../componentes/Loading';
 
 export default function NewTask({ navigation, route, idUser }) {
 
@@ -28,6 +31,8 @@ export default function NewTask({ navigation, route, idUser }) {
     const [erroMsg, setErrorMsg] = useState(null);
 
     const [origin, setOrigin] = useState(null);
+
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
         (async function () {
@@ -46,24 +51,6 @@ export default function NewTask({ navigation, route, idUser }) {
         })();
     }, []);
 
-    function addTask() {
-        database.collection("Tasks").add({
-            description: description,
-            user: usuario,
-            status: "pendente",
-            urgencia: selectedValue,
-            tipo: selectedTipo,
-            data: dia,
-            local: { origin },
-        })
-
-        alert("Solicitação Salva com Sucesso!")
-        navigation.navigate("Task", {
-            idUser: route.params.idUser,
-            emailUser: email,
-        });
-    }
-
     //Retorna a posição e endereço do usuario
     function getLocation() {
         let location = Location.getCurrentPositionAsync({});
@@ -75,8 +62,81 @@ export default function NewTask({ navigation, route, idUser }) {
     const camRef = useRef(null);
     const [type, setType] = useState(Camera.Constants.Type.back);
     const [hasPermission, sethasPermission] = useState(null);
-    const [capturedPhoto, setCapturePhoto] = useState(null);
+    const [nameImage, setNameImage] = useState(null);
+    const [image, setImage] = useState(null);
+    const [uploading, setUploading] = useState(false);
     const [open, setOpen] = useState(false);
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+        });
+        const source = { uri: result.uri };
+        console.log(source);
+        setImage(source);
+    };
+
+    const uploadImage = async () => {
+        console.log(image)
+        if (image == null) {
+            //envio da task
+            database.collection("Tasks").add({
+                description: description,
+                user: usuario,
+                status: "pendente",
+                urgencia: selectedValue,
+                tipo: selectedTipo,
+                data: dia,
+                local: { origin },
+                image: null,
+            })
+            Alert.alert(
+                "Sucesso",
+                "Relato Protocolado! Vamos analisar sua solicitação, acompanhe em Meus Chamados",
+            );
+
+            navigation.navigate("Task", {
+                idUser: route.params.idUser,
+                emailUser: email,
+            });
+        } else {
+            setUploading(true);
+            const response = await fetch(image.uri)
+            const blob = await response.blob();
+            const filename = image.uri.substring(image.uri.lastIndexOf('/') + 1);
+            var ref = firebase.storage().ref().child(filename).put(blob);
+            let uriimage = filename;
+
+            try {
+                await ref;
+            } catch (e) {
+                console.log(e);
+            }
+            setUploading(false);
+
+            //envio da task
+            database.collection("Tasks").add({
+                description: description,
+                user: usuario,
+                status: "pendente",
+                urgencia: selectedValue,
+                tipo: selectedTipo,
+                data: dia,
+                local: { origin },
+                image: uriimage,
+            })
+            Alert.alert(
+                "Sucesso",
+                "Relato Protocolado! Vamos analisar sua solicitação, acompanhe em Meus Chamados",
+            );
+
+            navigation.navigate("Task", {
+                idUser: route.params.idUser,
+                emailUser: email,
+            });
+            setImage(null);
+        }
+    };
 
     useEffect(() => {
         (async () => {
@@ -93,57 +153,31 @@ export default function NewTask({ navigation, route, idUser }) {
         return <Text>Acesso negado!</Text>;
     }
 
-    async function takePicture() {
-        if (camRef) {
-            const data = await camRef.current.takePictureAsync();
-            setCapturePhoto(data.uri);
-            setOpen(true);
-            console.log(data);
-        }
-    }
-
-
     return (
         <ScrollView style={styles.container}>
-            <View style={{ height: 1350 }}>
+
+
+            <View style={{ height: 1800 }}>
                 <Text style={styles.label}>Captura de Foto:</Text>
-                <Camera
-                    style={styles.maps}
-                    type={type}
-                    ref={camRef}
-                >
-                    <View style={{ flex: 1, backgroundColor: 'transparent', flexDirection: 'row' }}>
-                        <TouchableOpacity
-                            style={{
-                                position: 'absolute',
-                                bottom: 20,
-                                left: 20,
-                            }}
-                            onPress={() => {
-                                setType(
-                                    type === Camera.Constants.Type.back
-                                        ? Camera.Constants.Type.front
-                                        : Camera.Constants.Type.back
-                                );
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    marginBottom: 13,
-                                    backgroundColor: '#fff'
-                                }}
-                            >Trocar</Text>
+                <Text style={styles.aviso}>* A Foto nós ajudará a indentificar o local do relato.</Text>
+
+                <SafeAreaView>
+                    {image == null &&
+                        <TouchableOpacity style={styles.selectButton} onPress={pickImage}>
+                            <FontAwesome name='camera' size={23} color='#fff' />
                         </TouchableOpacity>
-                    </View>
-                </Camera>
+                    }
+                    {image != null &&
+                        <View style={styles.imageContainer}>
+                            {image && <Image source={{ uri: image.uri }} style={{ width: 300, height: 500 }} />}
+                        </View>
+                    }
+                </SafeAreaView>
 
-                <TouchableOpacity style={styles.buttonCam} onPress={takePicture}>
-                    <FontAwesome name='camera' size={23} color='#fff' />
-                </TouchableOpacity>
 
-
+                <Text style={styles.linha} />
                 <Text style={styles.label}>Localização:</Text>
+                <Text style={styles.aviso}>* A localização automatica, capturada pelo GPS de seu dispositivo.</Text>
                 <MapView
                     style={styles.maps}
                     initialRegion={origin}
@@ -153,7 +187,9 @@ export default function NewTask({ navigation, route, idUser }) {
                 >
                 </MapView>
 
+                <Text style={styles.linha} />
                 <Text style={styles.label}>Descrição</Text>
+                <Text style={styles.aviso}>Informações que você julgar importantes para complementar o relato. Ex: Perto da casa verde, Poste da calçada ou Poste com transformador.</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Digite a Descrição"
@@ -163,19 +199,23 @@ export default function NewTask({ navigation, route, idUser }) {
                     numberOfLines={10}
                 />
 
+                <Text style={styles.linha} />
                 <Text style={styles.label}>Gravidade:</Text>
+                <Text style={styles.aviso}>* Clique em Selecione.</Text>
                 <Picker
                     style={styles.select}
                     selectedValue={selectedValue}
                     onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                 >
-                    <Picker.Item label="Selecione" value="nd" />
-                    <Picker.Item label="Urgente" value="Urgente" />
-                    <Picker.Item label="Média" value="Média" />
-                    <Picker.Item label="Baixa" value="Baixa" />
+                    <Picker.Item style={styles.item} label="Selecione" value="nd" />
+                    <Picker.Item style={styles.item} label="Urgente" value="Urgente" />
+                    <Picker.Item style={styles.item} label="Média" value="Média" />
+                    <Picker.Item style={styles.item} label="Baixa" value="Baixa" />
                 </Picker>
 
+                <Text style={styles.linha} />
                 <Text style={styles.label}>Tipo do Relato:</Text>
+                <Text style={styles.aviso}>* Clique em Selecione.</Text>
                 <Picker
                     style={styles.select}
                     selectedTipo={selectedTipo}
@@ -188,37 +228,17 @@ export default function NewTask({ navigation, route, idUser }) {
                     <Picker.Item label="Vandalismo" value="Vandalismo" />
                 </Picker>
 
+                <Text style={styles.linha} />
+                <Loading visible={visible} />
                 <TouchableOpacity
                     style={styles.buttonNewTask}
-                    onPress={() => {
-                        addTask()
-                    }}
+                    onPress={uploadImage}
+                    onPressIn={() => setVisible(true)}
                 >
                     <Text style={styles.iconButton}>Salvar</Text>
                 </TouchableOpacity>
-
-                {capturedPhoto &&
-                    <Modal
-                        animationType='slide'
-                        transparent={false}
-                        visible={open}>
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', margin: 20 }}>
-                            <TouchableOpacity style={{ margin: 10 }} onPress={() => setOpen(false)}>
-                                <FontAwesome name="window-close" size={50} color="#FF0000" />
-                            </TouchableOpacity>
-                            <Image
-                                style={{ width: '100%', height: 300, borderRadius: 20 }}
-                                source={{ uri: capturedPhoto }}
-                            >
-
-                            </Image>
-                        </View>
-                    </Modal>
-                }
             </View>
         </ScrollView>
-
     )
-
 }
 

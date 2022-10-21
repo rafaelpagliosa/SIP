@@ -24,28 +24,31 @@ export default function NewUser({ navigation }) {
     const [password, setPassword] = useState("");
     const [errorRegister, setErrorRegister] = useState("");
 
+    const [uid, setUid] = useState("");
+
     const register = () => {
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 let user = userCredential.user;
+                let teste = user.uid;
+                alert(teste);
+                setUid(teste);
                 navigation.navigate("Login");
+
+                database.collection("Users").add({
+                    nome: nome,
+                    email: email,
+                    cpf: cpf,
+                    contato: contato,
+                    uid: teste,
+                })
+                alert("Olá " + nome + " Seja Bem Vindo.");
             })
             .catch((error) => {
                 setErrorRegister(true);
                 let errorCode = error.code;
                 let errorMessage = error.message;
-
             });
-    }
-
-    function addUser() {
-        database.collection("Users").add({
-            nome: nome,
-            email: email,
-            cpf: cpf,
-            contato: contato,
-        })
-        alert("Olá " + nome + " Seja Bem Vindo.");
     }
 
     return (
@@ -118,9 +121,7 @@ export default function NewUser({ navigation }) {
                 <TouchableOpacity
                     style={styles.buttonRegister}
                     onPress={() => {
-                        addUser()
                         register()
-                        
                     }}
                 >
                     <Text style={styles.textButtonRegister}>Registrar</Text>

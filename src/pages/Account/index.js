@@ -30,7 +30,6 @@ export default function Account({ navigation, route }) {
         });
     }, []);
 
-
     return (
         <View style={styles.container}>
             <FlatList
