@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from "react-native"
 
 import firebase from "../../config/firebaseconfig"
@@ -10,8 +10,22 @@ export default function Details({ navigation, route }) {
     const [tipoEdit, setTipoEdit] = useState(route.params.tipo)
     const [statusEdit, setStatusEdit] = useState(route.params.status)
     const [urgenciaEdit, setUrgenciaEdit] = useState(route.params.urgencia)
-    const [dataEdit, setDataEdit] = useState(route.params.data)
-    const idTask = route.params.id
+    const [dataEdit, setDataEdit] = useState(null)
+    const idTask = route.params.id;
+
+
+    useEffect(() => {
+        database.collection("Tasks").doc(route.params.id).get().then((doc) => {
+            if (doc.exists) {
+                var dado = doc.data();
+                console.log("Aqui");
+                setDataEdit(dado.data)
+                
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+    }, []);
 
     const database = firebase.firestore();
     return (

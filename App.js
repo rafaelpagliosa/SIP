@@ -14,6 +14,7 @@ import NewUser from './src/pages/NewUser/';
 import MyChamados from './src/pages/MyChamados';
 import Account from './src/pages/Account';
 import Map from './src/pages/Map';
+import Captured from './src/pages/Captured';
 
 import styles from './styles';
 const Stack = createStackNavigator()
@@ -95,6 +96,14 @@ export default function App() {
         <Stack.Screen
           name="Mapa"
           component={Map}
+          options={{
+            headerTintColor: "#2506DE",
+          }}
+        />
+
+        <Stack.Screen
+          name="Imagem"
+          component={Captured}
           options={{
             headerTintColor: "#2506DE",
           }}

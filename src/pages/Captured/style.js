@@ -28,7 +28,14 @@ const styles = StyleSheet.create({
         marginLeft: "15%",
         marginTop: "5%",
         marginBottom: "5%",
-    }
+    },
+    img: {
+        width: "96%",
+        height: "96%",
+        marginLeft: '2%',
+        marginTop: '2%',
+
+    },
 });
 
 export default styles

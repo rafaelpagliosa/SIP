@@ -10,7 +10,10 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: "5%"
+    marginTop: "5%",
+    backgroundColor: "#f2ae1b",
+    borderRadius: 50,
+    height: 100,
   },
   map: {
     justifyContent: "center",
@@ -19,7 +22,7 @@ const styles = StyleSheet.create({
     marginTop: "2%"
   },
   DescriptionTask: {
-    width: "80%",
+    width: "70%",
     alignContent: "flex-start",
     backgroundColor: "#f2ae1b",
     padding: 12,

@@ -17,8 +17,14 @@ export default function Account({ navigation, route }) {
     var usuario = route.params.idUser;
     var email = route.params.emailUser;
 
-    const [task, setTask] = useState([]);
+
     const database = firebase.firestore();
+
+    const [uid, setUid] = useState(null);
+    const [nome, setNome] = useState(null);
+    const [cpf, setCpf] = useState(null);
+    //const [email, setEmail] = useState(null);
+    const [contato, setContato] = useState(null);
 
     useEffect(() => {
         database.collection("Users").where("email", "==", email).onSnapshot((query) => {
@@ -26,64 +32,59 @@ export default function Account({ navigation, route }) {
             query.forEach((doc) => {
                 list.push({ ...doc.data(), id: doc.id });
             });
-            setTask(list);
+            setNome(list[0].nome);
+            setUid(list[0].uid);
+            setCpf(list[0].cpf);
+            setContato(list[0].contato);
         });
     }, []);
 
     return (
         <View style={styles.container}>
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                data={task}
-                renderItem={({ item }) => {
-                    return (
-                        <View style={styles.table}>
 
-                            <MaterialCommunityIcons
-                                name="account"
-                                size={30}
-                                color="#f2ae1b"
-                            />
-                            <Text style={styles.linha}>
-                                {item.nome}
-                            </Text>
+            <View style={styles.table}>
+
+                <MaterialCommunityIcons
+                    name="account"
+                    size={30}
+                    color="#f2ae1b"
+                />
+                <Text style={styles.linha}>
+                    <Text>{nome}</Text>
+                </Text>
 
 
-                            <MaterialCommunityIcons
-                                name="card-account-details-outline"
-                                size={30}
-                                color="#f2ae1b"
-                            />
-                            <Text style={styles.linha}>
-                                {item.cpf}
-                            </Text>
+                <MaterialCommunityIcons
+                    name="card-account-details-outline"
+                    size={30}
+                    color="#f2ae1b"
+                />
+                <Text style={styles.linha}>
+                    <Text>{cpf}</Text>
+                </Text>
 
 
-                            <MaterialCommunityIcons
-                                name="email"
-                                size={30}
-                                color="#f2ae1b"
-                            />
-
-
-                            <Text style={styles.linha}>
-                                {item.email}
-                            </Text>
+                <MaterialCommunityIcons
+                    name="email"
+                    size={30}
+                    color="#f2ae1b"
+                />
+                <Text style={styles.linha}>
+                    <Text>{email}</Text>
+                </Text>
 
 
 
-                            <MaterialCommunityIcons
-                                name="cellphone"
-                                size={30}
-                                color="#f2ae1b"
-                            />
-                            <Text style={styles.linha}>
-                                {item.contato}
-                            </Text>
-                        </View>
-                    )
-                }}
-            />
+                <MaterialCommunityIcons
+                    name="cellphone"
+                    size={30}
+                    color="#f2ae1b"
+                />
+                <Text style={styles.linha}>
+                    <Text>{contato}</Text>
+                </Text>
+            </View>
+
         </View>
     )
 }

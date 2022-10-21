@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Picker } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Picker, Image } from "react-native";
 
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -11,20 +11,26 @@ import styles from './style';
 
 export default function Map({ navigation, route }) {
     const database = firebase.firestore();
-    const [local, setlocal] = useState([]);
+    const storage = firebase.storage();
+    const [foto, setFoto] = useState(null);
 
 
     useEffect(() => {
         database.collection("Tasks").doc(route.params.id).get().then((doc) => {
-            if (doc.exists) {
-                var dado = doc.data();
-                console.log(dado);
-                setlocal(dado.local.origin)
-            }
+
+            var dado = doc.data();
+            console.log(dado);
+
+            storage.ref(dado.image).getDownloadURL().then((url) => {
+                console.log(url);
+                setFoto(url);
+            })
+
         }).catch((error) => {
             console.log("Error getting document:", error);
         });
     }, []);
+
 
     return (
         <View style={styles.container}>
@@ -32,16 +38,13 @@ export default function Map({ navigation, route }) {
             <View
                 style={styles.container2}
             >
-                <MapView
-                    style={styles.maps}
-                    initialRegion={local}
-                    showsUserLocation={true}
-                    zoomEnabled={true}
-                    loadingEnabled={true}
-                >
-                </MapView>
+                <Image
+                    style={styles.img}
+                    source={{
+                        uri: foto,
+                    }}
+                />
             </View>
-
         </View>
     )
 }

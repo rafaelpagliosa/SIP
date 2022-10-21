@@ -20,7 +20,12 @@ export default function NewTask({ navigation, route, idUser }) {
 
     var usuario = route.params.idUser;
     var email = route.params.emailUser;
-    var dia = new Date();
+
+    var data = new Date();
+    var dia = String(data.getDate()).padStart(2, '0');
+    var mes = String(data.getMonth() + 1).padStart(2, '0');
+    var ano = data.getFullYear();
+    var dia2 = dia + '/' + mes + '/' + ano;
 
     const database = firebase.firestore();
     const [description, setDescription] = useState(null);
@@ -86,7 +91,8 @@ export default function NewTask({ navigation, route, idUser }) {
                 status: "pendente",
                 urgencia: selectedValue,
                 tipo: selectedTipo,
-                data: dia,
+                data: dia2,
+                hora: data,
                 local: { origin },
                 image: null,
             })
@@ -121,7 +127,8 @@ export default function NewTask({ navigation, route, idUser }) {
                 status: "pendente",
                 urgencia: selectedValue,
                 tipo: selectedTipo,
-                data: dia,
+                data: dia2,
+                hora: data,
                 local: { origin },
                 image: uriimage,
             })
