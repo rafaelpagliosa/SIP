@@ -1,11 +1,12 @@
 import React from "react";
-import { View, Modal, Text, ActivityIndicator, Image } from 'react-native';
+import { View, Modal, Text, Image, ActivityIndicator } from 'react-native';
+
 import logo from './../../../assets/SIP.gif';
 
-export default function Loading({ visible }) {
+export default function Carregando({ visible }) {
     return (
         <Modal visible={visible}>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f4f4f4', }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',  backgroundColor: '#f4f4f4', }}>
 
 
                 <Image source={logo}
@@ -27,7 +28,7 @@ export default function Loading({ visible }) {
                     justifyContent: 'center',
                     fontSize: 15,
                     color: "#2506DE",
-                }}>Protocolando seu Relato</Text>
+                }}>Carregando</Text>
             </View>
         </Modal>
     )

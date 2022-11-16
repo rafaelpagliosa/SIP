@@ -14,32 +14,26 @@ const styles = StyleSheet.create({
     },
     input: {
         width: "90%",
-        marginTop: 10,
-        padding: 10,
-        height: 50,
+        marginTop: 2,
+        padding: 2,
         borderBottomWidth: 1,
         borderBottomColor: "#2506DE",
         marginLeft: "auto",
         marginRight: "auto",
         color: "#50555C",
     },
-
-
-    buttonNewTask: {
-        width: 60,
-        height: 60,
-        position: "absolute",
-        bottom: 30,
-        left: 20,
-        backgroundColor: "#2506DE",
-        borderRadius: 50,
-        justifyContent: "center",
-        alignItems: "center"
+    maps: {
+        width: "98%",
+        marginLeft: "1%",
+        marginTop: "1%",
+        height: "98%",
     },
-    iconButton: {
-        color: "#ffffff",
-        fontSize: 16,
-        fontWeight: "bold",
+    container2: {
+        backgroundColor: '#2506DE',
+        marginTop: "4%",
+        marginLeft: "4%",
+        marginRight: "4%",
+        height: "40%",
     },
     id: {
         color: "#2506DE",
@@ -48,7 +42,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginLeft: "15%",
         marginTop: "5%",
-        marginBottom: "5%",
     }
 
 });

@@ -11,6 +11,8 @@ import firebase from '../../config/firebaseconfig';
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import styles from './style';
 
+import Carregando from '../componentes/Carregando';
+
 
 export default function MyChamados({ navigation, route }) {
 
@@ -20,8 +22,11 @@ export default function MyChamados({ navigation, route }) {
     const [task, setTask] = useState([]);
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
-    const [chamados, setChamados] = useState(null);
+    const [chamados, setChamados] = useState(0);
+
+    const [visible, setVisible] = useState(true);
     const database = firebase.firestore();
+
 
     useEffect(() => {
         database.collection("Tasks").where("user", "==", usuario).onSnapshot((query) => {
@@ -31,21 +36,17 @@ export default function MyChamados({ navigation, route }) {
             });
             setTask(list);
             setChamados(list.length);
-
-            for (i = 0; i < task.length; i++) {
-                var latitudeMap = task[i].local.origin.latitude;
-                var longitudeMap = task[i].local.origin.longitude;
-
-                setLatitude(task[i].local.origin.latitude);
-                setLongitude(task[i].local.origin.longitude);
-            }
-
         });
+        setInterval(() => {
+            setVisible(false);
+        }, 3000);
     }, []);
-
 
     return (
         <View style={styles.container}>
+            <Text style={styles.chamados}> Chamados Realizados: {chamados}</Text>
+            <Carregando visible={visible} />
+
             <FlatList
                 showsVerticalScrollIndicator={false}
                 data={task}
@@ -61,6 +62,7 @@ export default function MyChamados({ navigation, route }) {
                                         idUser: user.uid,
                                     })
                                 }>
+
                                 <FontAwesome
                                     style={styles.editeTask}
                                     name="map"

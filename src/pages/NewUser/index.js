@@ -6,6 +6,8 @@ import {
     TextInput,
     TouchableOpacity,
     KeyboardAvoidingView,
+    Alert,
+    Image
 } from "react-native";
 
 //import firebase from '../../config/firebaseconfig';
@@ -13,6 +15,9 @@ import firebase from 'firebase/app'
 import styles from './style';
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { Platform } from 'react-native-web';
+
+
+import logo from './../../../assets/SIP.gif';
 
 export default function NewUser({ navigation }) {
 
@@ -42,7 +47,11 @@ export default function NewUser({ navigation }) {
                     contato: contato,
                     uid: teste,
                 })
-                alert("Olá " + nome + " Seja Bem Vindo.");
+                Alert.alert(
+                    "Sucesso",
+                    "Olá " + nome + " Seja bem Vindo !",
+                );
+
             })
             .catch((error) => {
                 setErrorRegister(true);

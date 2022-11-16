@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "crud",
-    "slug": "crud",
+    "name": "SIP",
+    "slug": "SIP",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,10 +23,21 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBAZ1G7gcYx3TUT7LcWGJBY8m61srU7Heg"
+        }
+      },
+      "package": "sip.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "53c77492-d4d4-4836-8048-b5ff4c326072"
+      }
     }
   }
 }

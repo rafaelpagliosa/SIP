@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     select: {
         width: "90%",
         marginLeft: "5%",
+        padding: 30,
         color: "#50555C",
         backgroundColor: 'white',
     },
@@ -42,6 +43,16 @@ const styles = StyleSheet.create({
         bottom: "-1%",
         marginLeft: "5%",
         backgroundColor: "#2506DE",
+        borderRadius: 50,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    buttonNewTask2: {
+        width: "90%",
+        height: 60,
+        bottom: "-1%",
+        marginLeft: "5%",
+        backgroundColor: "#50555C",
         borderRadius: 50,
         justifyContent: "center",
         alignItems: "center"
@@ -65,6 +76,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
     },
+    iconButton2: {
+        color: "#FFD700",
+        fontSize: 16,
+        fontWeight: "bold",
+    },
     iconAjuste: {
 
         marginTop: "5%",
@@ -76,11 +92,19 @@ const styles = StyleSheet.create({
 
     },
     maps: {
-        width: "90%",
-        marginLeft: "auto",
+        width: "98%",
+        marginLeft: "1%",
+        marginTop: "1%",
         marginRight: "auto",
-        height: "25%",
+        height: "98%",
         borderTopWidth: 1,
+    },
+    container2: {
+        backgroundColor: '#2506DE',
+        marginTop: "4%",
+        marginLeft: "4%",
+        marginRight: "4%",
+        height: "25%",
     },
     capture: {
         width: "90%",
@@ -121,7 +145,7 @@ const styles = StyleSheet.create({
         marginLeft: "5%"
     },
     linha2: {
-        borderColor:"#FFD700",
+        borderColor: "#FFD700",
         borderStyle: "solid",
         borderBottomWidth: 5,
         borderTopWidth: 0,
@@ -132,7 +156,8 @@ const styles = StyleSheet.create({
     aviso: {
         width: "90%",
         fontSize: 12,
-        marginLeft: 20,
+        marginLeft: 10,
+        padding: 10,
         color: "#20201E",
     },
     title: {
@@ -151,7 +176,7 @@ const styles = StyleSheet.create({
         marginLeft: "auto",
         marginRight: "auto",
     },
-    selectButton:{
+    selectButton: {
         borderRadius: 5,
         width: "90%",
         marginLeft: "5%",
@@ -160,7 +185,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    uploadButton:{
+    uploadButton: {
         borderRadius: 5,
         width: 150,
         height: 50,
@@ -173,13 +198,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    imageContainer:{
+    imageContainer: {
         marginBottom: 5,
         alignItems: 'center',
-    }
+        alignItems: 'center',
+    },
 
 
-    
+
+
 });
 
 export default styles

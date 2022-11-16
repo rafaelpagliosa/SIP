@@ -15,6 +15,15 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     height: 100,
   },
+  chamados: {
+    color: "#2506DE",
+    fontSize: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: "5%",
+    marginTop: "1%",
+    marginBottom: "1%",
+  },
   map: {
     justifyContent: "center",
     position: "absolute",

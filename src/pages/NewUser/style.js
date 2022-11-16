@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingTop: Platform.OS === "ios" ? 0 : 50,
     },
-
     title: {
         fontSize: 48,
         color: "#2506DE",

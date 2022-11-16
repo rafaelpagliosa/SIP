@@ -1,7 +1,11 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Picker, ScrollView, Modal, Image, Alert, ActivityIndicator } from "react-native";
-import { FontAwesome } from '@expo/vector-icons'
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal, Image, Alert, ActivityIndicator } from "react-native";
+
+import { Picker } from '@react-native-picker/picker';
+
+
+import { FontAwesome } from '@expo/vector-icons';
 
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -31,13 +35,14 @@ export default function NewTask({ navigation, route, idUser }) {
     const [description, setDescription] = useState(null);
     const [selectedValue, setSelectedValue] = useState(null);
     const [selectedTipo, setTipoValue] = useState(null);
+    const [visible, setVisible] = useState(false);
+
 
     const [location, setLocation] = useState(null);
     const [erroMsg, setErrorMsg] = useState(null);
 
     const [origin, setOrigin] = useState(null);
 
-    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
         (async function () {
@@ -63,14 +68,15 @@ export default function NewTask({ navigation, route, idUser }) {
         alert("Botao precionado")
         //setLocation(location);
     }
-
     const camRef = useRef(null);
     const [type, setType] = useState(Camera.Constants.Type.back);
     const [hasPermission, sethasPermission] = useState(null);
     const [nameImage, setNameImage] = useState(null);
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const [height, setHeight] = useState(false);
     const [open, setOpen] = useState(false);
+
 
     const pickImage = async () => {
         let result = await ImagePicker.launchCameraAsync({
@@ -85,6 +91,7 @@ export default function NewTask({ navigation, route, idUser }) {
         console.log(image)
         if (image == null) {
             //envio da task
+
             database.collection("Tasks").add({
                 description: description,
                 user: usuario,
@@ -96,6 +103,8 @@ export default function NewTask({ navigation, route, idUser }) {
                 local: { origin },
                 image: null,
             })
+
+
             Alert.alert(
                 "Sucesso",
                 "Relato Protocolado! Vamos analisar sua solicitação, acompanhe em Meus Chamados",
@@ -160,13 +169,15 @@ export default function NewTask({ navigation, route, idUser }) {
         return <Text>Acesso negado!</Text>;
     }
 
+
     return (
         <ScrollView style={styles.container}>
-
-
-            <View style={{ height: 1800 }}>
+            <View style={{ height: 1950 }}>
                 <Text style={styles.label}>Captura de Foto:</Text>
-                <Text style={styles.aviso}>* A Foto nós ajudará a indentificar o local do relato.</Text>
+                <Text style={styles.aviso}>* A Foto nós ajudará a identificar o local do relato.</Text>
+
+
+
 
                 <SafeAreaView>
                     {image == null &&
@@ -174,29 +185,34 @@ export default function NewTask({ navigation, route, idUser }) {
                             <FontAwesome name='camera' size={23} color='#fff' />
                         </TouchableOpacity>
                     }
-                    {image != null &&
+                    {image != null  &&
                         <View style={styles.imageContainer}>
                             {image && <Image source={{ uri: image.uri }} style={{ width: 300, height: 500 }} />}
                         </View>
                     }
+
                 </SafeAreaView>
 
 
                 <Text style={styles.linha} />
                 <Text style={styles.label}>Localização:</Text>
-                <Text style={styles.aviso}>* A localização automatica, capturada pelo GPS de seu dispositivo.</Text>
-                <MapView
-                    style={styles.maps}
-                    initialRegion={origin}
-                    showsUserLocation={true}
-                    zoomEnabled={true}
-                    loadingEnabled={true}
+                <Text style={styles.aviso}>* A localização automática capturada pelo GPS de seu dispositivo.</Text>
+                <View
+                    style={styles.container2}
                 >
-                </MapView>
+                    <MapView
+                        style={styles.maps}
+                        initialRegion={origin}
+                        showsUserLocation={true}
+                        zoomEnabled={true}
+                        loadingEnabled={true}
+                    >
+                    </MapView>
+                </View>
 
                 <Text style={styles.linha} />
                 <Text style={styles.label}>Descrição</Text>
-                <Text style={styles.aviso}>Informações que você julgar importantes para complementar o relato. Ex: Perto da casa verde, Poste da calçada ou Poste com transformador.</Text>
+                <Text style={styles.aviso}>Informações que você julgar importantes para complementar o relato. Ex: Perto da casa verde, poste da calçada ou poste com transformador.</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Digite a Descrição"
@@ -208,21 +224,24 @@ export default function NewTask({ navigation, route, idUser }) {
 
                 <Text style={styles.linha} />
                 <Text style={styles.label}>Gravidade:</Text>
-                <Text style={styles.aviso}>* Clique em Selecione.</Text>
+                <Text style={styles.aviso}>* Clique em selecione.</Text>
                 <Picker
                     style={styles.select}
                     selectedValue={selectedValue}
-                    onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-                >
+                    onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)
+
+                    }>
                     <Picker.Item style={styles.item} label="Selecione" value="nd" />
                     <Picker.Item style={styles.item} label="Urgente" value="Urgente" />
                     <Picker.Item style={styles.item} label="Média" value="Média" />
                     <Picker.Item style={styles.item} label="Baixa" value="Baixa" />
                 </Picker>
 
+
+
                 <Text style={styles.linha} />
                 <Text style={styles.label}>Tipo do Relato:</Text>
-                <Text style={styles.aviso}>* Clique em Selecione.</Text>
+                <Text style={styles.aviso}>* Clique em selecione.</Text>
                 <Picker
                     style={styles.select}
                     selectedTipo={selectedTipo}
@@ -237,13 +256,28 @@ export default function NewTask({ navigation, route, idUser }) {
 
                 <Text style={styles.linha} />
                 <Loading visible={visible} />
-                <TouchableOpacity
-                    style={styles.buttonNewTask}
-                    onPress={uploadImage}
-                    onPressIn={() => setVisible(true)}
-                >
-                    <Text style={styles.iconButton}>Salvar</Text>
-                </TouchableOpacity>
+
+
+                {description === "" || description === null || selectedValue === null || selectedTipo === null
+                    ?
+                    <TouchableOpacity
+                        disabled={true}
+                        style={styles.buttonNewTask2}
+                    >
+                        <Text style={styles.iconButton2}>Atenção! Preencha todos os campos</Text>
+                    </TouchableOpacity>
+
+                    //ok
+                    :
+                    <TouchableOpacity
+                        style={styles.buttonNewTask}
+                        onPress={uploadImage}
+                        onPressIn={() => setVisible(true)}
+                    >
+                        <Text style={styles.iconButton}>Salvar</Text>
+                    </TouchableOpacity>
+
+                }
             </View>
         </ScrollView>
     )

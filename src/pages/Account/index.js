@@ -11,6 +11,7 @@ import firebase from '../../config/firebaseconfig';
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import styles from './style';
 
+import Carregando from '../componentes/Carregando';
 
 export default function Account({ navigation, route }) {
 
@@ -23,6 +24,7 @@ export default function Account({ navigation, route }) {
     const [uid, setUid] = useState(null);
     const [nome, setNome] = useState(null);
     const [cpf, setCpf] = useState(null);
+    const [visible, setVisible] = useState(true);
     //const [email, setEmail] = useState(null);
     const [contato, setContato] = useState(null);
 
@@ -37,10 +39,16 @@ export default function Account({ navigation, route }) {
             setCpf(list[0].cpf);
             setContato(list[0].contato);
         });
-    }, []);
+        setInterval(() => {
+            setVisible(false);
+        }, 2000);
+    },
+        []);
 
     return (
         <View style={styles.container}>
+
+            <Carregando visible={visible} />
 
             <View style={styles.table}>
 

@@ -15,12 +15,14 @@ import { Platform } from "react-native-web"
 
 import logo from './../../../assets/SIP.gif';
 
+import Sip from '../componentes/Sip';
 
 export default function Login({ navigation }) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorLogin, setErrorLogin] = useState("");
+    const [visible, setVisible] = useState(true);
 
 
     const loginFirebase = () => {
@@ -34,22 +36,30 @@ export default function Login({ navigation }) {
                 let errorCode = error.code;
                 let errorMessage = error.message;
             });
+        setInterval(() => {
+            setVisible(false);
+        }, 1000);
     }
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-                navigation.navigate("Task", { idUser: user.uid, emailUser: user.email })
+                navigation.navigate("Task", { idUser: user.uid, emailUser: user.email });
             }
         });
+        setInterval(() => {
+            setVisible(false);
+        }, 2000);
 
     }, [])
 
     return (
+
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.container}
         >
+            <Sip visible={visible} />
             <Image
                 style={styles.logo}
                 source={logo}
